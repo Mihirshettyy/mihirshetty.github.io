@@ -1,0 +1,75 @@
+body {
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  background: #0b0f19;
+  color: #e2e8f0;
+}
+
+nav {
+  position: sticky;
+  top: 0;
+  background: rgba(15,23,42,0.8);
+  backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 10%;
+}
+
+nav a {
+  margin-left: 20px;
+  text-decoration: none;
+  color: white;
+}
+
+.nav-cta {
+  background: #3b82f6;
+  padding: 8px 16px;
+  border-radius: 6px;
+}
+
+section {
+  padding: 100px 10%;
+}
+
+h1 {
+  font-size: 52px;
+}
+
+.btn {
+  padding: 12px 24px;
+  border-radius: 8px;
+  text-decoration: none;
+}
+
+.primary {
+  background: #3b82f6;
+  color: white;
+}
+
+.secondary {
+  border: 1px solid white;
+  color: white;
+}
+
+.card {
+  background: #1e293b;
+  padding: 25px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.fade-in {
+  opacity: 0;
+  transform: translateY(30px);
+}
