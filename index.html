@@ -1,577 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Mihir Shetty — Engineering, Supply Chain & Operations</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
-<style>
-  :root {
-    --bg: #0a0a0f;
-    --surface: #111118;
-    --surface2: #18181f;
-    --border: #2a2a35;
-    --text: #f0f0f5;
-    --muted: #7a7a90;
-    --accent: #c8f060;
-    --accent2: #60d0f0;
-    --accent3: #f0a060;
-    --font-display: 'Syne', sans-serif;
-    --font-body: 'DM Sans', sans-serif;
-  }
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
-  body { background: var(--bg); color: var(--text); font-family: var(--font-body); font-size: 16px; line-height: 1.7; overflow-x: hidden; }
-  body::before {
-    content: ''; position: fixed; inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-    background-size: 200px 200px; pointer-events: none; z-index: 9999; opacity: 0.4;
-  }
-  nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 1.2rem 4rem;
-    background: rgba(10,10,15,0.85); backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(255,255,255,0.04); transition: padding 0.3s;
-  }
-  .nav-logo { font-family: var(--font-display); font-weight: 800; font-size: 1.15rem; letter-spacing: -0.02em; color: var(--text); text-decoration: none; }
-  .nav-logo span { color: var(--accent); }
-  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
-  .nav-links a { font-size: 0.85rem; font-weight: 500; color: var(--muted); text-decoration: none; letter-spacing: 0.03em; text-transform: uppercase; transition: color 0.2s; }
-  .nav-links a:hover { color: var(--text); }
-  .nav-cta { background: var(--accent) !important; color: #0a0a0f !important; padding: 0.55rem 1.3rem; border-radius: 2px; font-weight: 700 !important; }
-  .sticky-bar {
-    position: fixed; bottom: 1.5rem; left: 50%;
-    transform: translateX(-50%) translateY(80px); z-index: 200;
-    background: rgba(20,20,28,0.92); border: 1px solid var(--border); backdrop-filter: blur(16px);
-    border-radius: 100px; padding: 0.75rem 2rem;
-    display: flex; align-items: center; gap: 1.5rem; font-size: 0.85rem;
-    opacity: 0; transition: opacity 0.4s, transform 0.4s; pointer-events: none; white-space: nowrap;
-  }
-  .sticky-bar.visible { opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: all; }
-  .sticky-bar span { color: var(--muted); }
-  .sticky-bar a { background: var(--accent); color: #0a0a0f; padding: 0.4rem 1.1rem; border-radius: 100px; font-weight: 700; font-size: 0.78rem; text-decoration: none; transition: opacity 0.2s; }
-  .sticky-bar a:hover { opacity: 0.85; }
-  #hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 8rem 4rem 5rem; position: relative; overflow: hidden; }
-  .hero-bg-glow { position: absolute; top: -10%; right: -5%; width: 55vw; height: 70vh; background: radial-gradient(ellipse at 70% 30%, rgba(200,240,96,0.07) 0%, rgba(96,208,240,0.04) 40%, transparent 70%); pointer-events: none; }
-  .hero-tag { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.78rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); border: 1px solid rgba(200,240,96,0.3); padding: 0.35rem 0.9rem; border-radius: 2px; margin-bottom: 2rem; width: fit-content; animation: fadeUp 0.6s ease both; }
-  .hero-tag::before { content: ''; width: 6px; height: 6px; background: var(--accent); border-radius: 50%; animation: pulse 2s ease-in-out infinite; }
-  @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(1.4); } }
-  h1 { font-family: var(--font-display); font-weight: 800; font-size: clamp(3rem, 7vw, 6rem); line-height: 1.0; letter-spacing: -0.035em; max-width: 14ch; animation: fadeUp 0.6s 0.1s ease both; }
-  h1 .accent { color: var(--accent); }
-  h1 .dim { color: var(--muted); }
-  .hero-sub { font-size: clamp(1rem, 1.8vw, 1.2rem); color: var(--muted); max-width: 54ch; margin-top: 1.5rem; font-weight: 300; line-height: 1.75; animation: fadeUp 0.6s 0.2s ease both; }
-  .hero-sub strong { color: var(--text); font-weight: 500; }
-  .hero-actions { display: flex; gap: 1rem; margin-top: 2.5rem; flex-wrap: wrap; animation: fadeUp 0.6s 0.3s ease both; }
-  .btn-primary { background: var(--accent); color: #0a0a0f; font-family: var(--font-display); font-weight: 700; font-size: 0.9rem; padding: 0.85rem 2rem; border-radius: 2px; text-decoration: none; letter-spacing: 0.02em; transition: transform 0.2s, box-shadow 0.2s; display: inline-flex; align-items: center; gap: 0.5rem; }
-  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(200,240,96,0.25); }
-  .btn-secondary { background: transparent; color: var(--text); font-family: var(--font-display); font-weight: 600; font-size: 0.9rem; padding: 0.85rem 2rem; border-radius: 2px; text-decoration: none; border: 1px solid var(--border); letter-spacing: 0.02em; transition: border-color 0.2s, background 0.2s; display: inline-flex; align-items: center; gap: 0.5rem; }
-  .btn-secondary:hover { border-color: var(--muted); background: rgba(255,255,255,0.03); }
-  .hero-stats { display: flex; gap: 3rem; margin-top: 5rem; padding-top: 3rem; border-top: 1px solid var(--border); animation: fadeUp 0.6s 0.4s ease both; flex-wrap: wrap; }
-  .stat-number { font-family: var(--font-display); font-size: 2rem; font-weight: 800; line-height: 1; letter-spacing: -0.04em; }
-  .stat-number span { color: var(--accent); }
-  .stat-label { font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 0.3rem; }
-  section { padding: 7rem 4rem; }
-  .section-label { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.75rem; }
-  .section-title { font-family: var(--font-display); font-size: clamp(1.8rem, 3.5vw, 2.8rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; max-width: 20ch; }
-  .section-title .dim { color: var(--muted); }
-  #about { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center; max-width: 1100px; margin: 0 auto; }
-  .about-text { margin-top: 2rem; }
-  .about-text p { color: var(--muted); font-size: 1.05rem; line-height: 1.8; margin-bottom: 1.2rem; font-weight: 300; }
-  .about-text p strong { color: var(--text); font-weight: 500; }
-  .about-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; padding: 2rem; display: flex; flex-direction: column; gap: 1.5rem; }
-  .about-card-item { display: flex; gap: 1rem; align-items: flex-start; }
-  .aci-icon { width: 36px; height: 36px; background: rgba(200,240,96,0.08); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; border: 1px solid rgba(200,240,96,0.15); }
-  .aci-text strong { display: block; font-size: 0.88rem; font-weight: 600; color: var(--text); font-family: var(--font-display); }
-  .aci-text span { font-size: 0.8rem; color: var(--muted); }
-  .skills-outer { max-width: 1100px; margin: 0 auto; }
-  .skills-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 3rem; }
-  .skill-card { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 1.8rem; transition: border-color 0.2s, transform 0.2s; }
-  .skill-card:hover { border-color: rgba(200,240,96,0.3); transform: translateY(-2px); }
-  .skill-card-label { font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin-bottom: 1.2rem; }
-  .skill-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-  .skill-tag { font-size: 0.8rem; color: var(--text); background: rgba(255,255,255,0.05); border: 1px solid var(--border); padding: 0.3rem 0.75rem; border-radius: 2px; }
-  #experience { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-  .exp-inner { max-width: 1100px; margin: 0 auto; }
-  .exp-list { margin-top: 3rem; display: flex; flex-direction: column; gap: 1rem; }
-  .exp-item { display: grid; grid-template-columns: 240px 1fr; gap: 3rem; padding: 2.5rem; background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; transition: border-color 0.2s; }
-  .exp-item:hover { border-color: rgba(200,240,96,0.25); }
-  .exp-company { font-family: var(--font-display); font-weight: 700; font-size: 1rem; color: var(--text); letter-spacing: -0.01em; }
-  .exp-role { font-size: 0.82rem; color: var(--accent); font-weight: 500; margin-top: 0.25rem; }
-  .exp-period { font-size: 0.75rem; color: var(--muted); margin-top: 0.5rem; font-weight: 300; }
-  .exp-badge { display: inline-block; margin-top: 0.75rem; font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: #0a0a0f; background: var(--accent); padding: 0.2rem 0.6rem; border-radius: 2px; font-weight: 700; }
-  .exp-badge.blue { background: var(--accent2); }
-  .exp-badge.orange { background: var(--accent3); }
-  .exp-content h4 { font-family: var(--font-display); font-size: 0.95rem; font-weight: 600; color: var(--muted); margin-bottom: 1rem; }
-  .exp-results { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
-  .exp-results li { font-size: 0.9rem; color: var(--muted); display: flex; gap: 0.75rem; font-weight: 300; line-height: 1.6; }
-  .exp-results li::before { content: 'to'; color: var(--accent); flex-shrink: 0; margin-top: 0.05rem; font-style: normal; }
-  .exp-results li strong { color: var(--text); font-weight: 500; }
-  .projects-inner { max-width: 1100px; margin: 0 auto; }
-  .projects-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 3rem; }
-  .project-card { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 2.5rem; display: flex; flex-direction: column; gap: 1.5rem; transition: border-color 0.25s, transform 0.25s; position: relative; overflow: hidden; }
-  .project-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--accent), transparent); opacity: 0; transition: opacity 0.3s; }
-  .project-card:hover { border-color: rgba(200,240,96,0.3); transform: translateY(-3px); }
-  .project-card:hover::before { opacity: 1; }
-  .project-number { font-family: var(--font-display); font-size: 3.5rem; font-weight: 800; color: rgba(200,240,96,0.07); line-height: 1; letter-spacing: -0.05em; position: absolute; top: 1.5rem; right: 1.5rem; }
-  .project-tag { font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent2); font-weight: 600; }
-  .project-title { font-family: var(--font-display); font-size: 1.35rem; font-weight: 700; letter-spacing: -0.02em; line-height: 1.2; margin-top: 0.5rem; }
-  .project-meta { display: flex; flex-direction: column; gap: 0.6rem; }
-  .project-meta-row { display: flex; gap: 0.75rem; font-size: 0.85rem; line-height: 1.5; }
-  .pmr-label { color: var(--muted); font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; width: 60px; flex-shrink: 0; padding-top: 0.12rem; font-weight: 500; }
-  .pmr-val { color: var(--text); font-weight: 300; }
-  .pmr-val strong { font-weight: 500; color: var(--accent); }
-  .project-tools { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.5rem; }
-  .tool-chip { font-size: 0.72rem; color: var(--muted); border: 1px solid var(--border); padding: 0.22rem 0.65rem; border-radius: 2px; }
-  #credibility { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-  .cred-inner { max-width: 1100px; margin: 0 auto; }
-  .cred-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 3rem; }
-  .cred-card { border: 1px solid var(--border); border-radius: 4px; padding: 2rem; background: var(--surface2); transition: border-color 0.2s; }
-  .cred-card:hover { border-color: rgba(96,208,240,0.3); }
-  .cred-icon { font-size: 1.5rem; margin-bottom: 1rem; }
-  .cred-title { font-family: var(--font-display); font-weight: 700; font-size: 0.95rem; color: var(--text); margin-bottom: 0.4rem; }
-  .cred-sub { font-size: 0.8rem; color: var(--muted); font-weight: 300; line-height: 1.6; }
-  #contact { text-align: center; padding: 8rem 4rem; position: relative; overflow: hidden; }
-  #contact::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 60%, rgba(200,240,96,0.06) 0%, transparent 60%); pointer-events: none; }
-  .contact-inner { max-width: 700px; margin: 0 auto; position: relative; }
-  .contact-super { font-size: 0.75rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin-bottom: 1.5rem; }
-  .contact-headline { font-family: var(--font-display); font-size: clamp(2.2rem, 5vw, 3.5rem); font-weight: 800; letter-spacing: -0.04em; line-height: 1.05; margin-bottom: 1.5rem; }
-  .contact-sub { color: var(--muted); font-size: 1rem; font-weight: 300; line-height: 1.75; margin-bottom: 2.5rem; }
-  .contact-sub strong { color: var(--text); font-weight: 500; }
-  .contact-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 2.5rem; }
-  .contact-email { display: block; font-size: 0.82rem; color: var(--muted); font-weight: 300; }
-  .contact-email a { color: var(--accent2); text-decoration: none; font-weight: 500; }
-  .contact-email a:hover { text-decoration: underline; }
-  footer { border-top: 1px solid var(--border); padding: 2rem 4rem; display: flex; align-items: center; justify-content: space-between; font-size: 0.8rem; color: var(--muted); }
-  .footer-logo { font-family: var(--font-display); font-weight: 800; font-size: 1rem; letter-spacing: -0.02em; color: var(--text); text-decoration: none; }
-  .footer-logo span { color: var(--accent); }
-  .footer-links { display: flex; gap: 2rem; }
-  .footer-links a { color: var(--muted); text-decoration: none; transition: color 0.2s; font-size: 0.8rem; }
-  .footer-links a:hover { color: var(--text); }
-  @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
-  .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
-  .reveal.visible { opacity: 1; transform: translateY(0); }
-  .reveal-delay-1 { transition-delay: 0.1s; }
-  .reveal-delay-2 { transition-delay: 0.2s; }
-  .reveal-delay-3 { transition-delay: 0.3s; }
-  .marquee-wrap { overflow: hidden; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 1rem 0; background: var(--surface2); }
-  .marquee-track { display: flex; gap: 3rem; width: max-content; animation: marquee 25s linear infinite; white-space: nowrap; }
-  .marquee-item { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; gap: 1rem; }
-  .marquee-item::after { content: 'dot'; color: var(--accent); font-size: 1rem; font-style: normal; }
-  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-  @media (max-width: 900px) {
-    nav { padding: 1rem 1.5rem; }
-    .nav-links { display: none; }
-    section { padding: 5rem 1.5rem; }
-    #hero { padding: 7rem 1.5rem 4rem; }
-    .about-grid { grid-template-columns: 1fr; gap: 3rem; }
-    .skills-grid { grid-template-columns: 1fr; }
-    .projects-grid { grid-template-columns: 1fr; }
-    .cred-grid { grid-template-columns: 1fr; }
-    .exp-item { grid-template-columns: 1fr; gap: 1.5rem; }
-    footer { flex-direction: column; gap: 1.5rem; text-align: center; }
-    .sticky-bar { width: 90%; font-size: 0.8rem; padding: 0.65rem 1.2rem; }
-  }
-</style>
+  <meta charset="UTF-8">
+  <title>Mihir Shetty | Operations & Data Analyst</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
+
+<!-- NAVBAR -->
 <nav>
-  <a href="#" class="nav-logo">M<span>.</span></a>
-  <ul class="nav-links">
-    <li><a href="#about">About</a></li>
-    <li><a href="#experience">Experience</a></li>
-    <li><a href="#projects">Projects</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="Mihir_Shetty_Resume_Final.pdf" download class="nav-cta">Resume</a></li>
-  </ul>
+  <h2>Mihir.</h2>
+  <div>
+    <a href="#projects">Work</a>
+    <a href="#contact" class="nav-cta">Hire Me</a>
+  </div>
 </nav>
 
-<div class="sticky-bar" id="stickyBar">
-  <span>Open to opportunities</span>
-  <a href="#contact">Get in Touch</a>
-</div>
-
-<section id="hero">
-  <div class="hero-bg-glow"></div>
-  <div class="hero-tag">Open to Work · Mangalore / Bangalore, India</div>
-  <h1>Engineering<br><span class="dim">meets</span><br><span class="accent">Business</span><span class="dim">.</span></h1>
-  <p class="hero-sub">
-    I'm <strong>Mihir Shetty</strong> — a Mechanical Engineering graduate with hands-on experience across
-    <strong>AI-powered manufacturing inspection, EV supply chains, refinery operations, and procurement strategy</strong>.
-    I shipped a vision system hitting <strong>95%+ defect detection accuracy</strong> at Volvo CE and
-    stress-tested EV battery sourcing pipelines at a fast-moving startup.
-    I move fast, think in systems, and close the gap between engineering and business decisions.
+<!-- HERO -->
+<section class="hero fade-in">
+  <h1>I Turn Engineering Problems Into Data-Driven Systems</h1>
+  <p>
+    Mechanical Engineer with hands-on experience at Volvo Construction Equipment.  
+    I specialize in building systems that improve manufacturing efficiency using  
+    automation, analytics, and machine vision.
   </p>
-  <div class="hero-actions">
-    <a href="#projects" class="btn-primary">View My Work</a>
-    <a href="Mihir_Shetty_Resume_Final.pdf" download class="btn-secondary">Download Resume</a>
-    <a href="https://linkedin.com/in/mihir-shetty23" target="_blank" rel="noopener" class="btn-secondary">LinkedIn</a>
-  </div>
-  <div class="hero-stats">
-    <div class="stat-item">
-      <div class="stat-number">4<span>x</span></div>
-      <div class="stat-label">Industry Internships</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-number">95<span>%+</span></div>
-      <div class="stat-label">Defect Detection Accuracy</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-number">1000<span>+</span></div>
-      <div class="stat-label">Instruments Tracked via Power BI</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-number">15<span>MMTPA</span></div>
-      <div class="stat-label">Refinery Scale Exposure (MRPL)</div>
-    </div>
+
+  <div class="cta-buttons">
+    <a href="#projects" class="btn primary">View Work</a>
+    <a href="resume.pdf" class="btn secondary" download>Download Resume</a>
   </div>
 </section>
 
-<div class="marquee-wrap">
-  <div class="marquee-track">
-    <span class="marquee-item">Supply Chain</span>
-    <span class="marquee-item">Power BI</span>
-    <span class="marquee-item">YOLOv5</span>
-    <span class="marquee-item">Procurement Strategy</span>
-    <span class="marquee-item">EV Battery Sourcing</span>
-    <span class="marquee-item">CATIA</span>
-    <span class="marquee-item">Vendor Management</span>
-    <span class="marquee-item">Operations Analytics</span>
-    <span class="marquee-item">Manufacturing QA</span>
-    <span class="marquee-item">Supply Chain</span>
-    <span class="marquee-item">Power BI</span>
-    <span class="marquee-item">YOLOv5</span>
-    <span class="marquee-item">Procurement Strategy</span>
-    <span class="marquee-item">EV Battery Sourcing</span>
-    <span class="marquee-item">CATIA</span>
-    <span class="marquee-item">Vendor Management</span>
-    <span class="marquee-item">Operations Analytics</span>
-    <span class="marquee-item">Manufacturing QA</span>
-  </div>
-</div>
+<!-- PROOF -->
+<section class="proof fade-in">
+  <p>Worked with</p>
+  <h2>Volvo Construction Equipment</h2>
+</section>
 
-<section id="about">
-  <div class="about-grid">
-    <div class="reveal">
-      <div class="section-label">About Me</div>
-      <h2 class="section-title">Not a cog.<br><span class="dim">A catalyst.</span></h2>
-      <div class="about-text">
-        <p>I graduated from MIT Manipal with a B.Tech in Mechanical Engineering — but what I actually studied is <strong>how systems break, where value leaks, and how to fix both</strong>. My minor in Digital Marketing means I understand not just how products are built, but how they reach the world.</p>
-        <p>Across four internships spanning <strong>AI manufacturing, EV startups, petrochemical refining, and engineering procurement</strong>, I've moved from shopfloor to boardroom — always focused on the metric that matters most.</p>
-        <p>Targeting roles in <strong>supply chain, operations analytics, procurement strategy, or management consulting</strong> — anywhere engineering rigor and commercial thinking create an edge.</p>
-      </div>
-    </div>
-    <div class="about-card reveal reveal-delay-1">
-      <div class="about-card-item">
-        <div class="aci-icon">&#127891;</div>
-        <div class="aci-text"><strong>MIT Manipal — B.Tech Mechanical Engineering</strong><span>Minor: Digital Marketing · 2021–2025</span></div>
-      </div>
-      <div class="about-card-item">
-        <div class="aci-icon">&#129302;</div>
-        <div class="aci-text"><strong>Volvo Construction Equipment</strong><span>AI Vision Inspection · Power BI · Feb–May 2025</span></div>
-      </div>
-      <div class="about-card-item">
-        <div class="aci-icon">&#9889;</div>
-        <div class="aci-text"><strong>Jupiter Electric Mobility</strong><span>EV Battery Sourcing · Jan–Mar 2026</span></div>
-      </div>
-      <div class="about-card-item">
-        <div class="aci-icon">&#127981;</div>
-        <div class="aci-text"><strong>MRPL (15 MMTPA Refinery)</strong><span>Operations Exposure · Jul 2024</span></div>
-      </div>
-      <div class="about-card-item">
-        <div class="aci-icon">&#128230;</div>
-        <div class="aci-text"><strong>Esteem Engineering Company</strong><span>Procurement from JSW Steel · Jun 2024</span></div>
-      </div>
-      <div class="about-card-item">
-        <div class="aci-icon">&#128205;</div>
-        <div class="aci-text"><strong>Based in Mangalore / Bangalore, India</strong><span>Open to relocate · On-site and Remote</span></div>
-      </div>
-    </div>
+<!-- PROJECTS -->
+<section id="projects" class="fade-in">
+  <h2>Selected Work</h2>
+
+  <div class="card">
+    <h3>Automated Defect Detection System</h3>
+    <p><strong>Problem:</strong> Inconsistent manual inspection</p>
+    <p><strong>Solution:</strong> Vision-based system using YOLO</p>
+    <p><strong>Impact:</strong> 95%+ accuracy, reduced manual dependency</p>
+    <span>YOLOv5 • Python • CVAT</span>
+  </div>
+
+  <div class="card">
+    <h3>Power BI Calibration Dashboard</h3>
+    <p><strong>Problem:</strong> Manual tool tracking</p>
+    <p><strong>Solution:</strong> Automated dashboard across 4 lines</p>
+    <p><strong>Impact:</strong> Real-time visibility & efficiency</p>
+    <span>Power BI • Excel</span>
+  </div>
+
+</section>
+
+<!-- SKILLS -->
+<section class="skills fade-in">
+  <h2>Skills</h2>
+
+  <div class="grid">
+    <div class="card">Power BI / Data Analytics</div>
+    <div class="card">Supply Chain & Operations</div>
+    <div class="card">Python / Machine Vision</div>
+    <div class="card">Manufacturing Systems</div>
   </div>
 </section>
 
-<section id="skills" style="padding:7rem 4rem;">
-  <div class="skills-outer">
-    <div class="section-label reveal">Skills and Tools</div>
-    <h2 class="section-title reveal">What I bring<br><span class="dim">to the table.</span></h2>
-    <div class="skills-grid">
-      <div class="skill-card reveal">
-        <div class="skill-card-label">Supply Chain and Procurement</div>
-        <div class="skill-tags">
-          <span class="skill-tag">Vendor Management</span>
-          <span class="skill-tag">Strategic Sourcing</span>
-          <span class="skill-tag">Purchase Order Management</span>
-          <span class="skill-tag">Quotation Analysis</span>
-          <span class="skill-tag">Inventory Planning</span>
-          <span class="skill-tag">EV Battery Ecosystem</span>
-        </div>
-      </div>
-      <div class="skill-card reveal reveal-delay-1">
-        <div class="skill-card-label">Data and Analytics</div>
-        <div class="skill-tags">
-          <span class="skill-tag">Power BI</span>
-          <span class="skill-tag">DAX</span>
-          <span class="skill-tag">KPI Dashboard Design</span>
-          <span class="skill-tag">Microsoft Excel (Advanced)</span>
-          <span class="skill-tag">Stakeholder Reporting</span>
-          <span class="skill-tag">Process Analysis</span>
-        </div>
-      </div>
-      <div class="skill-card reveal reveal-delay-2">
-        <div class="skill-card-label">Vision and Engineering</div>
-        <div class="skill-tags">
-          <span class="skill-tag">YOLOv5</span>
-          <span class="skill-tag">Discovery Software</span>
-          <span class="skill-tag">Image Dataset Annotation</span>
-          <span class="skill-tag">FEA</span>
-          <span class="skill-tag">CATIA</span>
-          <span class="skill-tag">AutoCAD</span>
-          <span class="skill-tag">Root Cause Analysis</span>
-        </div>
-      </div>
-    </div>
-  </div>
+<!-- CTA -->
+<section class="cta fade-in">
+  <h2>Let’s Build Something That Actually Works</h2>
+  <p>
+    If you need someone who understands engineering AND data —  
+    I can bring both to the table.
+  </p>
+
+  <a href="#contact" class="btn primary">Let’s Talk</a>
 </section>
 
-<section id="experience">
-  <div class="exp-inner">
-    <div class="section-label reveal">Work Experience</div>
-    <h2 class="section-title reveal">Four internships.<br><span class="dim">Four industries.</span></h2>
-    <div class="exp-list">
-
-      <div class="exp-item reveal">
-        <div class="exp-meta">
-          <div class="exp-company">Volvo Construction Equipment</div>
-          <div class="exp-role">Mechanical Engineering Intern</div>
-          <div class="exp-period">Feb 2025 – May 2025</div>
-          <div class="exp-badge">AI and Manufacturing</div>
-        </div>
-        <div class="exp-content">
-          <h4>Deployed AI vision on the factory floor — not in a lab</h4>
-          <ul class="exp-results">
-            <li>Co-designed and deployed a <strong>YOLOv5-powered inspection system for Main Control Valves</strong> achieving over 95% defect detection accuracy in live shopfloor conditions</li>
-            <li>Built and annotated an image dataset of <strong>2,000 to 4,000 images</strong> across multiple defect categories using Discovery software — enabling reliable real-time detection</li>
-            <li>Integrated a <strong>multi-face inspection workflow with barcode scanning and mechanical part rotation</strong>, materially reducing manual inspection effort on the production line</li>
-            <li>Developed a <strong>Power BI dashboard tracking calibration for 1,000+ precision instruments</strong>, improving audit readiness and giving plant management live operational visibility</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="exp-item reveal">
-        <div class="exp-meta">
-          <div class="exp-company">Jupiter Electric Mobility</div>
-          <div class="exp-role">Sourcing Intern</div>
-          <div class="exp-period">Jan 2026 – Mar 2026</div>
-          <div class="exp-badge blue">EV and Supply Chain</div>
-        </div>
-        <div class="exp-content">
-          <h4>Inside India's EV battery supply chain from the ground floor</h4>
-          <ul class="exp-results">
-            <li>Gained end-to-end exposure to <strong>sourcing workflows within a lithium-ion battery manufacturing environment</strong>, developing working knowledge of EV component supply chains and vendor ecosystems</li>
-            <li>Supported <strong>purchase order management and procurement documentation</strong>, maintaining supplier records and tracking order fulfilment pipelines</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="exp-item reveal">
-        <div class="exp-meta">
-          <div class="exp-company">MRPL</div>
-          <div class="exp-role">Operations Intern</div>
-          <div class="exp-period">Jul 2024 · Mangalore</div>
-          <div class="exp-badge orange">Refinery Operations</div>
-        </div>
-        <div class="exp-content">
-          <h4>15 MMTPA refinery — operations, equipment, and asset management</h4>
-          <ul class="exp-results">
-            <li>Observed and documented <strong>process flows across CDU, VDU, and utility systems</strong> in one of India's largest refineries, building foundational knowledge of continuous industrial operations</li>
-            <li>Participated in <strong>equipment walkdowns and maintenance scheduling reviews</strong>, gaining exposure to plant asset management at industrial scale</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="exp-item reveal">
-        <div class="exp-meta">
-          <div class="exp-company">Esteem Engineering Co.</div>
-          <div class="exp-role">Supply Chain and Procurement Intern</div>
-          <div class="exp-period">Jun 2024</div>
-          <div class="exp-badge">Procurement</div>
-        </div>
-        <div class="exp-content">
-          <h4>Raw material procurement from Tier-1 industrial suppliers</h4>
-          <ul class="exp-results">
-            <li>Coordinated <strong>raw material procurement from Tier-1 vendors including JSW Steel</strong>, tracking delivery schedules and resolving supply gaps for tanker manufacturing orders</li>
-            <li>Conducted <strong>multi-vendor quotation analysis</strong> and assisted in inventory planning, contributing to improved procurement lead times and supplier accountability</li>
-          </ul>
-        </div>
-      </div>
-
-    </div>
-  </div>
+<!-- CONTACT -->
+<section id="contact" class="fade-in">
+  <h2>Contact</h2>
+  <p>Email: your@email.com</p>
+  <p><a href="#">LinkedIn</a></p>
 </section>
 
-<section id="projects" style="padding:7rem 4rem;">
-  <div class="projects-inner">
-    <div class="section-label reveal">Featured Projects</div>
-    <h2 class="section-title reveal">The work that<br><span class="dim">actually ships.</span></h2>
-    <div class="projects-grid">
-
-      <div class="project-card reveal">
-        <div class="project-number">01</div>
-        <div>
-          <div class="project-tag">Computer Vision · Manufacturing AI</div>
-          <div class="project-title">Volvo MCV Vision Inspection System</div>
-        </div>
-        <div class="project-meta">
-          <div class="project-meta-row"><div class="pmr-label">Problem</div><div class="pmr-val">Manual inspection of Main Control Valves was inconsistent and catching defects too late in the production line</div></div>
-          <div class="project-meta-row"><div class="pmr-label">Solution</div><div class="pmr-val">Co-built an automated inspection pipeline with YOLOv5, multi-face scanning, and barcode-linked part tracking</div></div>
-          <div class="project-meta-row"><div class="pmr-label">Impact</div><div class="pmr-val"><strong>95%+ defect detection accuracy</strong> · Deployed live on shopfloor · Reduced manual inspection effort</div></div>
-        </div>
-        <div class="project-tools">
-          <span class="tool-chip">YOLOv5</span><span class="tool-chip">Discovery Software</span><span class="tool-chip">Image Annotation</span><span class="tool-chip">Manufacturing QA</span>
-        </div>
-      </div>
-
-      <div class="project-card reveal reveal-delay-1">
-        <div class="project-number">02</div>
-        <div>
-          <div class="project-tag">Data Analytics · Operations Intelligence</div>
-          <div class="project-title">Tool Calibration Tracking Dashboard</div>
-        </div>
-        <div class="project-meta">
-          <div class="project-meta-row"><div class="pmr-label">Problem</div><div class="pmr-val">1,000+ precision instruments with no centralised compliance view — audit readiness was reactive, not proactive</div></div>
-          <div class="project-meta-row"><div class="pmr-label">Solution</div><div class="pmr-val">Designed a multi-page Power BI dashboard tracking calibration status, due dates, and compliance for all instruments</div></div>
-          <div class="project-meta-row"><div class="pmr-label">Impact</div><div class="pmr-val"><strong>Live compliance visibility for 1,000+ instruments</strong> · Enabled proactive scheduling · Improved audit readiness</div></div>
-        </div>
-        <div class="project-tools">
-          <span class="tool-chip">Power BI</span><span class="tool-chip">DAX</span><span class="tool-chip">Excel</span><span class="tool-chip">KPI Design</span>
-        </div>
-      </div>
-
-      <div class="project-card reveal reveal-delay-2">
-        <div class="project-number">03</div>
-        <div>
-          <div class="project-tag">Materials Science · Academic Research</div>
-          <div class="project-title">Bending Behaviour of Al vs. Steel</div>
-        </div>
-        <div class="project-meta">
-          <div class="project-meta-row"><div class="pmr-label">Study</div><div class="pmr-val">3-point bending tests on Aluminium and Mild Steel specimens using a Universal Testing Machine at MIT Manipal</div></div>
-          <div class="project-meta-row"><div class="pmr-label">Output</div><div class="pmr-val">Determined Modulus of Rupture, Modulus of Elasticity, and Stress at Proportionality Limit for both materials</div></div>
-          <div class="project-meta-row"><div class="pmr-label">Key Data</div><div class="pmr-val"><strong>Al: MoR 166.67 N/mm2 · Steel: MoR 1,181.55 N/mm2</strong></div></div>
-        </div>
-        <div class="project-tools">
-          <span class="tool-chip">UTM Testing</span><span class="tool-chip">Materials Analysis</span><span class="tool-chip">FEA</span><span class="tool-chip">Technical Reporting</span>
-        </div>
-      </div>
-
-      <div class="project-card reveal reveal-delay-3">
-        <div class="project-number">04</div>
-        <div>
-          <div class="project-tag">Renewable Energy · Fuel Research</div>
-          <div class="project-title">Simarouba Biodiesel Blend Study</div>
-        </div>
-        <div class="project-meta">
-          <div class="project-meta-row"><div class="pmr-label">Study</div><div class="pmr-val">Investigated viscosity, flash point, and fire point of Simarouba biodiesel across B10 to B100 blend ratios</div></div>
-          <div class="project-meta-row"><div class="pmr-label">Method</div><div class="pmr-val">Benchmarked all blend ratios against ASTM standards to identify optimal performance-compatibility balance</div></div>
-          <div class="project-meta-row"><div class="pmr-label">Finding</div><div class="pmr-val"><strong>B20 identified as the optimal blend</strong> · Flash point B100: 155-175 degrees C</div></div>
-        </div>
-        <div class="project-tools">
-          <span class="tool-chip">Fuel Property Testing</span><span class="tool-chip">ASTM Standards</span><span class="tool-chip">Biodiesel Research</span>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<section id="credibility">
-  <div class="cred-inner">
-    <div class="section-label reveal">Why Me</div>
-    <h2 class="section-title reveal">Built to be<br><span class="dim">verified.</span></h2>
-    <div class="cred-grid">
-      <div class="cred-card reveal">
-        <div class="cred-icon">&#127891;</div>
-        <div class="cred-title">MIT Manipal — B.Tech Mechanical Engineering</div>
-        <div class="cred-sub">Graduated 2025 · Minor in Digital Marketing · Curriculum spanning manufacturing, systems thinking, FEA, and business strategy</div>
-      </div>
-      <div class="cred-card reveal reveal-delay-1">
-        <div class="cred-icon">&#129302;</div>
-        <div class="cred-title">Production-Grade AI — Shipped at Volvo CE</div>
-        <div class="cred-sub">A YOLOv5 inspection system deployed live on the shopfloor, achieving over 95% defect accuracy on real manufacturing components — not a classroom project</div>
-      </div>
-      <div class="cred-card reveal reveal-delay-2">
-        <div class="cred-icon">&#9889;</div>
-        <div class="cred-title">EV Supply Chain — Early Exposure</div>
-        <div class="cred-sub">Worked inside India's emerging lithium-ion battery supply chain at Jupiter Electric Mobility — understanding the ecosystem from the inside</div>
-      </div>
-      <div class="cred-card reveal reveal-delay-1">
-        <div class="cred-icon">&#128202;</div>
-        <div class="cred-title">Power BI — Real Stakeholders, Real Data</div>
-        <div class="cred-sub">Deployed dashboards at Volvo CE tracking 1,000+ instruments — plant management, live audit decisions, real operational stakes</div>
-      </div>
-      <div class="cred-card reveal reveal-delay-2">
-        <div class="cred-icon">&#128230;</div>
-        <div class="cred-title">Procurement from Tier-1 Suppliers</div>
-        <div class="cred-sub">Coordinated procurement from JSW Steel at Esteem Engineering — quotation analysis, inventory planning, supplier accountability, hands-on</div>
-      </div>
-      <div class="cred-card reveal reveal-delay-3">
-        <div class="cred-icon">&#127758;</div>
-        <div class="cred-title">4 Languages · Cross-Functional by Nature</div>
-        <div class="cred-sub">English, Hindi, Kannada, and Tulu. Operated across engineering, QA, procurement, and plant ops teams in every internship</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="contact">
-  <div class="contact-inner">
-    <div class="contact-super reveal">Available for Opportunities</div>
-    <h2 class="contact-headline reveal">Let's build<br>something<br><span style="color:var(--accent);">that matters.</span></h2>
-    <p class="contact-sub reveal">
-      Whether you're hiring for <strong>supply chain, operations analytics, procurement, or consulting</strong>,
-      building something ambitious in <strong>EVs, manufacturing, or industrial tech</strong>,
-      or just want a sharp conversation — I respond fast and come prepared.
-    </p>
-    <div class="contact-actions reveal">
-      <a href="mailto:mihirshetty2003@gmail.com" class="btn-primary">Send me a message</a>
-      <a href="Mihir_Shetty_Resume_Final.pdf" download class="btn-secondary">Download Resume</a>
-    </div>
-    <div class="contact-email reveal">
-      Direct: <a href="mailto:mihirshetty2003@gmail.com">mihirshetty2003@gmail.com</a>
-      &nbsp;·&nbsp;
-      <a href="tel:+919741730433" style="color:var(--accent2); text-decoration:none; font-weight:500;">+91 97417 30433</a>
-    </div>
-  </div>
-</section>
-
-<footer>
-  <a href="#" class="footer-logo">Mihir<span>.</span></a>
-  <div style="font-size:0.78rem; color:var(--muted);">Mangalore, Karnataka · Open to Relocate</div>
-  <div class="footer-links">
-    <a href="https://linkedin.com/in/mihir-shetty23" target="_blank" rel="noopener">LinkedIn</a>
-    <a href="mailto:mihirshetty2003@gmail.com">Email</a>
-    <a href="Mihir_Shetty_Resume_Final.pdf" download>Resume</a>
-  </div>
-</footer>
-
-<script>
-  const revealEls = document.querySelectorAll('.reveal');
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
-  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-  revealEls.forEach(el => observer.observe(el));
-
-  const stickyBar = document.getElementById('stickyBar');
-  window.addEventListener('scroll', () => {
-    const scrolled = window.scrollY > window.innerHeight * 0.7;
-    const nearBottom = (window.innerHeight + window.scrollY) >= document.body.offsetHeight - 200;
-    stickyBar.classList.toggle('visible', scrolled && !nearBottom);
-  });
-
-  const navEl = document.querySelector('nav');
-  window.addEventListener('scroll', () => { navEl.style.padding = window.scrollY > 60 ? '0.8rem 4rem' : ''; });
-</script>
+<script src="script.js"></script>
 </body>
 </html>
